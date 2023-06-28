@@ -9,6 +9,7 @@ from .models import Profile
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.urls import reverse
 
 """
 def user_login(request):
@@ -55,7 +56,10 @@ def register(request):
             # Создать профиль пользователя
             Profile.objects.create(user=new_user)
             return render(request, 'account/register_done.html',
-                          {'new_user': new_user})
+                                  {'new_user': new_user})
+        else:
+            return render(request, 'account/register.html', {'user_form': user_form})
+        
     else:
         user_form = UserRegistrationForm()
         return render(request, 'account/register.html', {'user_form': user_form})
@@ -76,6 +80,13 @@ def edit(request):
                              'successfully')
         else:
             messages.error(request, 'Error updating your profile')
+
+    # Проверьте, является ли пользователь администратором и есть ли у него профиль
+    elif request.user.is_superuser and not hasattr(request.user, 'profile'):
+            # return render(request, 'account/admin_no_profile.html')
+            admin_url = reverse('admin:index')
+            return render(request, 'account/admin_no_profile.html', {'admin_url': admin_url})
+
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
