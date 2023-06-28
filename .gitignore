@@ -253,3 +253,6 @@ fabric.properties
 # файлы сертификатов
 cert.crt
 cert.key
+
+*.crt
+*.key
