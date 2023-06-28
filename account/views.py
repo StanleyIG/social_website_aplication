@@ -81,7 +81,7 @@ def edit(request):
         else:
             messages.error(request, 'Error updating your profile')
 
-    # Проверьте, является ли пользователь администратором и есть ли у него профиль
+    # Проверить, является ли пользователь администратором и есть ли у него профиль
     elif request.user.is_superuser and not hasattr(request.user, 'profile'):
             # return render(request, 'account/admin_no_profile.html')
             admin_url = reverse('admin:index')
